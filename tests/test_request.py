@@ -1,0 +1,28 @@
+import pytest
+from django.test import TestCase
+from graphene.test import Client
+
+from django_psql.schema import schema
+import requests
+
+
+query1 = """
+	query{
+	    request(token:"qwertyuiop")
+	}
+"""
+
+
+@pytest.mark.django_db
+class TestRequest(TestCase):
+
+	def setup(self):
+		self.client = Client(schema)
+
+
+	def test_get_request(self):
+		url = "http://127.0.0.1:8000/"
+
+		response = requests.get(url=url, json={'query': query1})
+
+		assert response.status_code == 200
