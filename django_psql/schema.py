@@ -2,6 +2,13 @@ from app1.models import Course, Student
 import graphene
 from graphene_django import DjangoObjectType
 import requests
+import logging
+
+
+# logging.basicConfig(filename="logs/course_record.log", level=logging.INFO)
+logger = logging.getLogger(__file__)
+
+
 
 
 class CourseType(DjangoObjectType):
@@ -24,6 +31,7 @@ class CreateCourse(graphene.Mutation):
 
 	def mutate(self, info, name):
 		courses = Course.objects.create(name=name)
+		logger.info('New course record created')
 		return CreateCourse(courses=courses)
 
 
@@ -39,6 +47,7 @@ class UpdateCourse(graphene.Mutation):
 		if course:
 			course.name = name if name is not None else course.name
 			course.save()
+			logger.info("Update of course record successful")
 		return UpdateCourse(courses=course)
 
 
@@ -52,7 +61,11 @@ class DeleteCourse(graphene.Mutation):
 		course = Course.objects.filter(id=id).first()
 		if course:
 			course.delete()
+			logger.debug('Course record deleted successful')
 		return DeleteCourse(courses=course)
+
+
+logging.basicConfig(filename="logs/request_logs.log", level=logging.info)
 
 
 class Query(graphene.ObjectType):
@@ -63,6 +76,8 @@ class Query(graphene.ObjectType):
 	def resolve_request(root, info, token):
 		if token == 'qwertyuiop':
 			response  = requests.get(url="https://api.github.com/users/mralexgray/repos")
+
+			logging.info('Got success response')
 
 			return response.json()
 
