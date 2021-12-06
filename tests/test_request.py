@@ -35,7 +35,9 @@ class TestRequest(TestCase):
 	def test_invalid_token(self):
 		url = "http://127.0.0.1:8000/"
 
-		response = requests.get(url=url, json={'query': query2})
+		response = requests.get(url=url, json={'query': query2})	
+		if "errors" in response.json():
+			message = response.json()['errors'][0].get('message')
 
-		assert response.status_code == 200
+		assert message == "Invalid token"
 

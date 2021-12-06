@@ -163,7 +163,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django_psql.schema': {
+        'django': {
             'handlers':['console'],
             'propagate': True,
             'level':'WARN',
@@ -173,7 +173,8 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'MYAPP': {
+        #below app is the name that we have to pass same in  getLogger method
+        'app': { 
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },

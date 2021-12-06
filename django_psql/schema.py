@@ -3,13 +3,10 @@ import graphene
 from graphene_django import DjangoObjectType
 import requests
 import logging
+from django_psql.custom_errors import APIException
 
 
-# logging.basicConfig(filename="logs/course_record.log", level=logging.INFO)
-logger = logging.getLogger(__file__)
-
-
-
+logger = logging.getLogger('app')
 
 class CourseType(DjangoObjectType):
 	class Meta:
@@ -61,11 +58,8 @@ class DeleteCourse(graphene.Mutation):
 		course = Course.objects.filter(id=id).first()
 		if course:
 			course.delete()
-			logger.debug('Course record deleted successful')
+			logger.info('Course record deleted successful')
 		return DeleteCourse(courses=course)
-
-
-logging.basicConfig(filename="logs/request_logs.log", level=logging.info)
 
 
 class Query(graphene.ObjectType):
@@ -77,14 +71,18 @@ class Query(graphene.ObjectType):
 		if token == 'qwertyuiop':
 			response  = requests.get(url="https://api.github.com/users/mralexgray/repos")
 
-			logging.info('Got success response')
+			logger.info('Response retrieved')
 
 			return response.json()
+		else:
+			raise APIException("Invalid token", status=401)
 
 	def resolve_all_courses(root, info, name=None):
+		logger.info('All course records retrieved')
 		return Course.objects.all()
 
 	def resolve_all_students(root, info, name=None, course_id=None):
+		logger.info('All students records retrieved')
 		return Student.objects.all()
 
 
