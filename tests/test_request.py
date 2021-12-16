@@ -13,7 +13,7 @@ query1 = """
 """
 query2 = """
 	query{
-	    request(token:"qertyuiop")
+	    request(token:"qertuiop")
 	}
 """
 

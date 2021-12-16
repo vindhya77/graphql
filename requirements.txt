@@ -1,2 +1,4 @@
-django
-gunicorn
+Django>=3.0,<4.0
+psycopg2>=2.8
+graphene-django>=2.0
+requests
